@@ -8,6 +8,7 @@ import com.vmf.VMFleet.kafka.KConstants;
 import com.vmf.VMFleet.kafka.serdes.vehiclemetrics.VehicleDataDes;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.jeasy.rules.api.Rules;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -20,31 +21,37 @@ import static com.vmf.VMFleet.utils.VfmMetricUtil.AggregateByMetric;
 @Service
 public class VfmSpeedService {
     @Autowired
-    VehicleService vehicleService;
+    private VehicleService vehicleService;
 
     @Autowired
-    VehicleDataDes vehicleDataDes;
+    private VehicleDataDes vehicleDataDes;
 
     @Autowired
-    VfmMetricsRepo metricsRepo;
+    private VfmMetricsRepo metricsRepo;
+
+    @Autowired
+    private FleetRuleService fleetRuleService;
+
+    private Rules speedRules;
 
     public final int SPEED_LIMIT = 100;
 
     @KafkaListener(topics = KConstants.SPEED_TOPIC, groupId = "SpeedParser")
     public void consume(ConsumerRecord<String, String> record)
     {
-        log.info(String.format("record: %s", record.value()));
+        log.info(String.format("%s record: %s", this.getClass().getSimpleName(),
+                record.value()));
+
         VehicleData vehicleData =
                 vehicleDataDes.deserialize(record.value().getBytes(StandardCharsets.UTF_8));
+
         process(vehicleData);
+
+        fleetRuleService.evaluateSpeedRules(vehicleData);
     }
 
     private void process(VehicleData vehicleData) {
         int speed = vehicleData.getSpeed();
-        VehicleMetric vehicleMetric = vehicleService.getLastPos(vehicleData.getId());
-        vehicleMetric.setSpeed(speed);
-        vehicleMetric.setLastUpdated(System.currentTimeMillis());
-        vehicleService.updateVehiclePos(vehicleMetric);
         if (speed > SPEED_LIMIT) {
             AggregateByMetric(1, VfmMetrics.MetricType.SPEED, vehicleData, metricsRepo);
         }

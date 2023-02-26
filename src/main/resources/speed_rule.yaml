@@ -1,0 +1,6 @@
+name: "speed rule"
+description: "do not exceed 100kmph"
+priority: 1
+condition: "vehicleData.getSpeed() > 100"
+actions:
+  - "System.out.println(\"Sorry, you have exceeded the speed limit\");"

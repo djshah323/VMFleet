@@ -24,12 +24,6 @@ public class VehicleMetric {
     private double longitude;
 
     @Column
-    private int speed;
-
-    @Column
-    private int fuel;
-
-    @Column
     private long lastUpdated;
 
     public VehicleMetric(int id) {

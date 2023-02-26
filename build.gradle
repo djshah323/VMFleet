@@ -25,6 +25,7 @@ dependencies {
 	implementation 'org.springframework.kafka:spring-kafka'
 	implementation 'org.apache.kafka:kafka-streams'
 	implementation 'org.jeasy:easy-rules-core:4.1.0'
+	implementation 'org.jeasy:easy-rules-mvel:4.1.0'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'

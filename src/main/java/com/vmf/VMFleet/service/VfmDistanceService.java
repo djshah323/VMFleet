@@ -33,9 +33,11 @@ public class VfmDistanceService {
     @KafkaListener(topics = KConstants.DISTANCE_TOPIC, groupId = "DistanceParser")
     public void consume(ConsumerRecord<String, String> record)
     {
-        log.info(String.format("record: %s", record.value()));
+        log.info(String.format("%s record: %s", this.getClass().getSimpleName(), record.value()));
+
         VehicleData vehicleData =
                 vehicleDataDes.deserialize(record.value().getBytes(StandardCharsets.UTF_8));
+
         process(vehicleData);
     }
 
@@ -48,15 +50,9 @@ public class VfmDistanceService {
                                 vehicleData.getLongitude());
             AggregateByMetric(distanceKm, VfmMetrics.MetricType.DISTANCE, vehicleData, metricsRepo);
         }
-        vehicleService.updateVehiclePos(updatePos(vehicleData));
-    }
-
-    private VehicleMetric updatePos(VehicleData vehicleData) {
-        VehicleMetric vehicleMetric = new VehicleMetric();
-        vehicleMetric.setId(vehicleData.getId());
         vehicleMetric.setLatitude(vehicleData.getLatitude());
         vehicleMetric.setLongitude(vehicleData.getLongitude());
         vehicleMetric.setLastUpdated(System.currentTimeMillis());
-        return vehicleMetric;
+        vehicleService.updateVehiclePos(vehicleMetric);
     }
 }
