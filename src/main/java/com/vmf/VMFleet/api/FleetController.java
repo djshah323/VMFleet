@@ -5,6 +5,7 @@ import com.vmf.VMFleet.api.model.VehicleRegisterRequest;
 import com.vmf.VMFleet.dao.Vehicle;
 import com.vmf.VMFleet.exceptions.VehicleInActiveException;
 import com.vmf.VMFleet.exceptions.VehicleNotFoundException;
+import com.vmf.VMFleet.service.ReportService;
 import com.vmf.VMFleet.service.VehicleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.KafkaException;
@@ -22,6 +23,9 @@ public class FleetController {
 
     @Autowired
     VehicleService vehicleService;
+
+    @Autowired
+    ReportService reportService;
 
     @PostMapping("/v1/vehicle")
     public Vehicle addVehicleToFleet(@RequestBody VehicleRegisterRequest vehicleRegistrationRequest) {
@@ -47,5 +51,11 @@ public class FleetController {
         } catch (KafkaException ex) {
             throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
+    }
+
+    @PostMapping("/v1/vehicle/report")
+    public void reportFleet(@RequestBody VehicleRegisterRequest vehicleRegistrationRequest) {
+        log.info("Received new vehicle report request");
+        reportService.generateReport();
     }
 }
