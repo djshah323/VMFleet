@@ -1,6 +1,7 @@
 package com.vmf.VMFleet.dao;
 
 import lombok.Data;
+import org.springframework.context.annotation.Bean;
 
 import javax.persistence.*;
 
@@ -33,11 +34,11 @@ public class VfmMetrics {
     public enum MetricType {
         DISTANCE,
         SPEED,
-        FUEL
+        FUEL;
     }
 
     public enum AggType {
         DAILY,
-        MONTHLY
+        MONTHLY;
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.data.util.Pair;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class VfmMetricUtil {
 
@@ -24,9 +25,10 @@ public class VfmMetricUtil {
         int monthIndex = today.getMonth();
         Pair<VfmMetrics, VfmMetrics> pairOfVfmMetrics =
                 createNew(vehicleData.getId(), dayIndex, monthIndex, metricType);
-        List<VfmMetrics> metricsList =
-                metricsRepo.getMetricsByVehicleId(vehicleData.getId());
-        if (metricsList != null && !metricsList.isEmpty()) {
+        List<VfmMetrics> metricsList = metricsRepo.getMetricsByVehicleId(vehicleData.getId())
+                .stream().filter(m -> m.getMetricName() == metricType)
+                .collect(Collectors.toList());
+        if (!metricsList.isEmpty()) {
             metricsList.stream()
                     .filter(monthMetric -> (monthMetric.getAggType() == VfmMetrics.AggType.MONTHLY
                             && monthMetric.getDateTimeNumber() == monthIndex))
@@ -47,7 +49,7 @@ public class VfmMetricUtil {
                                     pairOfVfmMetrics.getFirst().setMetricValue(Integer.toString(aggregatedValue));
                                 });
                     }, () -> {
-                        metricsList.forEach(metric-> metricsRepo.delete(metric));
+                        metricsList.forEach(metricsRepo::delete);
                         pairOfVfmMetrics.getFirst().setMetricValue(Integer.toString(aggregatedValue));
                         pairOfVfmMetrics.getSecond().setMetricValue(Integer.toString(aggregatedValue));
                     });
