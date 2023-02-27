@@ -33,8 +33,8 @@ public class VfmMetrics {
 
     public enum MetricType {
         DISTANCE,
-        SPEED,
-        FUEL;
+        SPEED_HIGH,
+        FUEL_LOW;
     }
 
     public enum AggType {

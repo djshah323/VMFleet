@@ -1,7 +1,6 @@
 package com.vmf.VMFleet.service;
 
 import com.vmf.VMFleet.api.model.VehicleData;
-import com.vmf.VMFleet.dao.VehicleMetric;
 import com.vmf.VMFleet.dao.VfmMetrics;
 import com.vmf.VMFleet.dao.VfmMetricsRepo;
 import com.vmf.VMFleet.kafka.KConstants;
@@ -53,7 +52,7 @@ public class VfmSpeedService {
     private void process(VehicleData vehicleData) {
         int speed = vehicleData.getSpeed();
         if (speed > SPEED_LIMIT) {
-            AggregateByMetric(1, VfmMetrics.MetricType.SPEED, vehicleData, metricsRepo);
+            AggregateByMetric(1, VfmMetrics.MetricType.SPEED_HIGH, vehicleData, metricsRepo);
         }
     }
 }

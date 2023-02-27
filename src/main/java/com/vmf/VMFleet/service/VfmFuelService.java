@@ -1,7 +1,6 @@
 package com.vmf.VMFleet.service;
 
 import com.vmf.VMFleet.api.model.VehicleData;
-import com.vmf.VMFleet.dao.VehicleMetric;
 import com.vmf.VMFleet.dao.VfmMetrics;
 import com.vmf.VMFleet.dao.VfmMetricsRepo;
 import com.vmf.VMFleet.kafka.KConstants;
@@ -44,7 +43,7 @@ public class VfmFuelService {
     private void process(VehicleData vehicleData) {
         int fuel = vehicleData.getFuel();
         if (fuel < LOW_FUEL) {
-            AggregateByMetric(1, VfmMetrics.MetricType.FUEL, vehicleData, metricsRepo);
+            AggregateByMetric(1, VfmMetrics.MetricType.FUEL_LOW, vehicleData, metricsRepo);
         }
     }
 }

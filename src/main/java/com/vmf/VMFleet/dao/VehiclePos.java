@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Table
 @Data
 @NoArgsConstructor
-public class VehicleMetric {
+public class VehiclePos {
     @Id
     @Column
     private int id;
@@ -26,7 +26,7 @@ public class VehicleMetric {
     @Column
     private long lastUpdated;
 
-    public VehicleMetric(int id) {
+    public VehiclePos(int id) {
         this.id = id;
     }
 }

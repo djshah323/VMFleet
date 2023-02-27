@@ -1,7 +1,7 @@
 package com.vmf.VMFleet.service;
 
 import com.vmf.VMFleet.api.model.VehicleData;
-import com.vmf.VMFleet.dao.VehicleMetric;
+import com.vmf.VMFleet.dao.VehiclePos;
 import com.vmf.VMFleet.dao.VfmMetrics;
 import com.vmf.VMFleet.dao.VfmMetricsRepo;
 import com.vmf.VMFleet.kafka.KConstants;
@@ -42,17 +42,17 @@ public class VfmDistanceService {
     }
 
     private void process(VehicleData vehicleData) {
-        VehicleMetric vehicleMetric = vehicleService.getLastPos(vehicleData.getId());
-        if (vehicleMetric.getLastUpdated() != 0) {
-            int distanceKm = calculateDistanceInKilometer(vehicleMetric.getLatitude(),
-                                vehicleMetric.getLongitude(),
+        VehiclePos vehiclePos = vehicleService.getLastPos(vehicleData.getId());
+        if (vehiclePos.getLastUpdated() != 0) {
+            int distanceKm = calculateDistanceInKilometer(vehiclePos.getLatitude(),
+                                vehiclePos.getLongitude(),
                                 vehicleData.getLatitude(),
                                 vehicleData.getLongitude());
             AggregateByMetric(distanceKm, VfmMetrics.MetricType.DISTANCE, vehicleData, metricsRepo);
         }
-        vehicleMetric.setLatitude(vehicleData.getLatitude());
-        vehicleMetric.setLongitude(vehicleData.getLongitude());
-        vehicleMetric.setLastUpdated(System.currentTimeMillis());
-        vehicleService.updateVehiclePos(vehicleMetric);
+        vehiclePos.setLatitude(vehicleData.getLatitude());
+        vehiclePos.setLongitude(vehicleData.getLongitude());
+        vehiclePos.setLastUpdated(System.currentTimeMillis());
+        vehicleService.updateVehiclePos(vehiclePos);
     }
 }

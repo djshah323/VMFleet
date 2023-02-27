@@ -26,7 +26,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.kafka:spring-kafka'
-	implementation 'org.apache.kafka:kafka-streams'
 	implementation 'org.jeasy:easy-rules-core:4.1.0'
 	implementation 'org.jeasy:easy-rules-mvel:4.1.0'
 	implementation 'net.sf.jasperreports:jasperreports:6.20.0'

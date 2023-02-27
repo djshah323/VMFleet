@@ -3,6 +3,7 @@ package com.vmf.VMFleet.api;
 import com.vmf.VMFleet.api.model.VehicleData;
 import com.vmf.VMFleet.api.model.VehicleRegisterRequest;
 import com.vmf.VMFleet.dao.Vehicle;
+import com.vmf.VMFleet.exceptions.VehicleAlreadyExistsException;
 import com.vmf.VMFleet.exceptions.VehicleInActiveException;
 import com.vmf.VMFleet.exceptions.VehicleNotFoundException;
 import com.vmf.VMFleet.service.ReportService;
@@ -11,8 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.KafkaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.ArrayList;
 
@@ -28,9 +29,15 @@ public class FleetController {
     ReportService reportService;
 
     @PostMapping("/v1/vehicle")
-    public Vehicle addVehicleToFleet(@RequestBody VehicleRegisterRequest vehicleRegistrationRequest) {
-        log.info("Received new vehicle request");
-        return vehicleService.addVehicle(vehicleRegistrationRequest);
+    public ResponseEntity addVehicleToFleet(@RequestBody VehicleRegisterRequest vehicleRegistrationRequest) {
+        try {
+            log.info("Received new vehicle request");
+            return new ResponseEntity(vehicleService.addVehicle(vehicleRegistrationRequest), HttpStatus.CREATED);
+        } catch(VehicleAlreadyExistsException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch(Exception ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/v1/vehicle")
@@ -39,18 +46,19 @@ public class FleetController {
         return vehicleService.getAllVehicle();
     }
 
-    @PostMapping("/v1/vehicle/metric")
-    public void pushMetric(@RequestBody VehicleData metrics) {
+    @PostMapping("/v1/vehicle/{id}/metric")
+    public ResponseEntity pushMetric(@PathVariable int id, @RequestBody VehicleData metrics) {
         try {
             vehicleService.pushNewMetric(metrics);
-            log.info(String.format("%s metrics published", metrics.getId()));
+            log.info(String.format("Metrics published for vehicle with id %s", metrics.getId()));
         } catch (VehicleNotFoundException ex) {
-            throw new HttpServerErrorException(HttpStatus.NOT_FOUND, ex.getMessage());
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         } catch (VehicleInActiveException ex) {
-            throw new HttpServerErrorException(HttpStatus.BAD_REQUEST, ex.getMessage());
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (KafkaException ex) {
-            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/v1/vehicle/report")
