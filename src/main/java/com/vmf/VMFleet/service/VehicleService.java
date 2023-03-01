@@ -2,10 +2,7 @@ package com.vmf.VMFleet.service;
 
 import com.vmf.VMFleet.api.model.VehicleData;
 import com.vmf.VMFleet.api.model.VehicleRegisterRequest;
-import com.vmf.VMFleet.dao.Vehicle;
-import com.vmf.VMFleet.dao.VehiclePos;
-import com.vmf.VMFleet.dao.VehiclePosRepo;
-import com.vmf.VMFleet.dao.VehicleRepo;
+import com.vmf.VMFleet.dao.*;
 import com.vmf.VMFleet.exceptions.VehicleAlreadyExistsException;
 import com.vmf.VMFleet.exceptions.VehicleInActiveException;
 import com.vmf.VMFleet.exceptions.VehicleNotFoundException;
@@ -16,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class VehicleService {
@@ -27,6 +25,9 @@ public class VehicleService {
 
     @Autowired
     private KFleetPublisher metricsPublisher;
+
+    @Autowired
+    private VfmMetricsRepo vfmMetricsRepo;
 
     public Vehicle addVehicle(VehicleRegisterRequest request) throws VehicleAlreadyExistsException {
         try {
@@ -72,5 +73,11 @@ public class VehicleService {
     public VehiclePos getLastPos(int id) {
        return vehiclePosRepo.findById(id)
                .orElse(new VehiclePos(id));
+    }
+
+    public List<VfmMetrics> getVehicleMetricsById(int id) throws VehicleNotFoundException {
+        vehicleRepo.findById(id)
+                .orElseThrow(VehicleNotFoundException::new);
+        return vfmMetricsRepo.getMetricsByVehicleId(id);
     }
 }

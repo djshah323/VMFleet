@@ -1,9 +1,10 @@
 package com.vmf.VMFleet;
 
+import org.h2.tools.Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.h2.tools.Server;
+
 import java.sql.SQLException;
 
 @SpringBootApplication

@@ -1,7 +1,6 @@
 package com.vmf.VMFleet.dao;
 
 import lombok.Data;
-import org.springframework.context.annotation.Bean;
 
 import javax.persistence.*;
 
