@@ -1,6 +1,6 @@
 package com.vmf.VMFleet.service;
 
-import com.vmf.VMFleet.api.model.VehicleData;
+import com.vmf.VMFleet.dao.VehicleData;
 import com.vmf.VMFleet.dao.VfmMetrics;
 import com.vmf.VMFleet.dao.VfmMetricsRepo;
 import com.vmf.VMFleet.kafka.KConstants;

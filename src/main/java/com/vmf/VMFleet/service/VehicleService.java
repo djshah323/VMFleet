@@ -1,6 +1,6 @@
 package com.vmf.VMFleet.service;
 
-import com.vmf.VMFleet.api.model.VehicleData;
+import com.vmf.VMFleet.dao.VehicleData;
 import com.vmf.VMFleet.api.model.VehicleRegisterRequest;
 import com.vmf.VMFleet.dao.*;
 import com.vmf.VMFleet.exceptions.VehicleAlreadyExistsException;
@@ -19,6 +19,9 @@ import java.util.List;
 public class VehicleService {
     @Autowired
     private VehicleRepo vehicleRepo;
+
+    @Autowired
+    private VehicleDataRepo vehicleDataRepo;
 
     @Autowired
     private VehiclePosRepo vehiclePosRepo;
@@ -51,7 +54,7 @@ public class VehicleService {
 
     public void pushNewMetric(VehicleData metrics)
             throws VehicleNotFoundException, KafkaException, VehicleInActiveException {
-        Vehicle vehicle = getVehicle(metrics.getId());
+        Vehicle vehicle = getVehicle(metrics.getVehicleId());
         if (vehicle.getState() == Vehicle.CollectionState.INACTIVE) {
             throw new VehicleInActiveException();
         }
@@ -79,5 +82,11 @@ public class VehicleService {
         vehicleRepo.findById(id)
                 .orElseThrow(VehicleNotFoundException::new);
         return vfmMetricsRepo.getMetricsByVehicleId(id);
+    }
+
+    public List<VehicleData> getVehicleDataById(int id) throws VehicleNotFoundException {
+        vehicleRepo.findById(id)
+                .orElseThrow(VehicleNotFoundException::new);
+        return vehicleDataRepo.getDataByVehicleId(id);
     }
 }

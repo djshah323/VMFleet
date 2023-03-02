@@ -1,6 +1,6 @@
 package com.vmf.VMFleet.service;
 
-import com.vmf.VMFleet.api.model.VehicleData;
+import com.vmf.VMFleet.dao.VehicleData;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jeasy.rules.api.Facts;

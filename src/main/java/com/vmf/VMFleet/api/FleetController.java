@@ -1,6 +1,6 @@
 package com.vmf.VMFleet.api;
 
-import com.vmf.VMFleet.api.model.VehicleData;
+import com.vmf.VMFleet.dao.VehicleData;
 import com.vmf.VMFleet.api.model.VehicleRegisterRequest;
 import com.vmf.VMFleet.dao.VfmMetrics;
 import com.vmf.VMFleet.exceptions.VehicleAlreadyExistsException;
@@ -50,7 +50,7 @@ public class FleetController {
     public ResponseEntity pushMetric(@PathVariable int id, @RequestBody VehicleData metrics) {
         try {
             vehicleService.pushNewMetric(metrics);
-            log.info(String.format("Metrics published for vehicle with id %s", metrics.getId()));
+            log.info(String.format("Metrics published for vehicle with id %s", metrics.getVehicleId()));
         } catch (VehicleNotFoundException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         } catch (VehicleInActiveException ex) {
@@ -66,6 +66,18 @@ public class FleetController {
         try {
            List<VfmMetrics> metricsList =  vehicleService.getVehicleMetricsById(id);
            return new ResponseEntity(metricsList, HttpStatus.OK);
+        } catch (VehicleNotFoundException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        } catch(Exception ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/v1/vehicle/{id}/data")
+    public ResponseEntity getData(@PathVariable int id) {
+        try {
+            List<VehicleData> dataList =  vehicleService.getVehicleDataById(id);
+            return new ResponseEntity(dataList, HttpStatus.OK);
         } catch (VehicleNotFoundException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         } catch(Exception ex) {

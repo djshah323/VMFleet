@@ -1,7 +1,7 @@
 package com.vmf.VMFleet.kafka.serdes.vehiclemetrics;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vmf.VMFleet.api.model.VehicleData;
+import com.vmf.VMFleet.dao.VehicleData;
 import org.apache.kafka.common.serialization.Serializer;
 
 public class VehicleDataSer implements Serializer {

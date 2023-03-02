@@ -1,7 +1,7 @@
 package com.vmf.VMFleet.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vmf.VMFleet.api.model.VehicleData;
+import com.vmf.VMFleet.dao.VehicleData;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.KafkaException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class KFleetPublisher {
   	try {
 		ListenableFuture<SendResult<String, String>> future =
 				this.kafkaTemplate.send(KConstants.RAW_EVENTS_TOPIC,
-						Integer.toString(vehicleData.getId()),
+						Integer.toString(vehicleData.getVehicleId()),
 						mapper.writeValueAsString(vehicleData));
 		future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
 			@Override
@@ -51,7 +51,7 @@ public class KFleetPublisher {
 	try {
 		ListenableFuture<SendResult<String, String>> future =
 				this.kafkaTemplate.send(KConstants.DISTANCE_TOPIC,
-						Integer.toString(vehicleData.getId()),
+						Integer.toString(vehicleData.getVehicleId()),
 						mapper.writeValueAsString(vehicleData));
 		future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
 			@Override
@@ -75,7 +75,7 @@ public class KFleetPublisher {
 	try {
 		ListenableFuture<SendResult<String, String>> future =
 				this.kafkaTemplate.send(KConstants.SPEED_TOPIC,
-						Integer.toString(vehicleData.getId()),
+						Integer.toString(vehicleData.getVehicleId()),
 						mapper.writeValueAsString(vehicleData));
 		future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
 			@Override
@@ -99,7 +99,7 @@ public class KFleetPublisher {
 	try {
 		ListenableFuture<SendResult<String, String>> future =
 				this.kafkaTemplate.send(KConstants.FUEL_TOPIC,
-						Integer.toString(vehicleData.getId()),
+						Integer.toString(vehicleData.getVehicleId()),
 						mapper.writeValueAsString(vehicleData));
 		future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
 			@Override

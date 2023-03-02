@@ -1,6 +1,6 @@
 package com.vmf.VMFleet.kafka;
 
-import com.vmf.VMFleet.api.model.VehicleData;
+import com.vmf.VMFleet.dao.VehicleData;
 import com.vmf.VMFleet.kafka.serdes.vehiclemetrics.VehicleDataDes;
 import com.vmf.VMFleet.service.VfmMetricDispatcher;
 import lombok.extern.slf4j.Slf4j;

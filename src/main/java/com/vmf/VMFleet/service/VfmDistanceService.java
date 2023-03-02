@@ -1,6 +1,6 @@
 package com.vmf.VMFleet.service;
 
-import com.vmf.VMFleet.api.model.VehicleData;
+import com.vmf.VMFleet.dao.VehicleData;
 import com.vmf.VMFleet.dao.VehiclePos;
 import com.vmf.VMFleet.dao.VfmMetrics;
 import com.vmf.VMFleet.dao.VfmMetricsRepo;
@@ -42,7 +42,7 @@ public class VfmDistanceService {
     }
 
     private void process(VehicleData vehicleData) {
-        VehiclePos vehiclePos = vehicleService.getLastPos(vehicleData.getId());
+        VehiclePos vehiclePos = vehicleService.getLastPos(vehicleData.getVehicleId());
         if (vehiclePos.getLastUpdated() != 0) {
             int distanceKm = calculateDistanceInKilometer(vehiclePos.getLatitude(),
                                 vehiclePos.getLongitude(),

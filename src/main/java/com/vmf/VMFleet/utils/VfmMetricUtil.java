@@ -1,6 +1,6 @@
 package com.vmf.VMFleet.utils;
 
-import com.vmf.VMFleet.api.model.VehicleData;
+import com.vmf.VMFleet.dao.VehicleData;
 import com.vmf.VMFleet.dao.VfmMetrics;
 import com.vmf.VMFleet.dao.VfmMetricsRepo;
 import org.springframework.data.util.Pair;
@@ -24,8 +24,8 @@ public class VfmMetricUtil {
         int dayIndex = today.getDate();
         int monthIndex = today.getMonth();
         Pair<VfmMetrics, VfmMetrics> pairOfVfmMetrics =
-                createNew(vehicleData.getId(), dayIndex, monthIndex, metricType);
-        List<VfmMetrics> metricsList = metricsRepo.getMetricsByVehicleId(vehicleData.getId())
+                createNew(vehicleData.getVehicleId(), dayIndex, monthIndex, metricType);
+        List<VfmMetrics> metricsList = metricsRepo.getMetricsByVehicleId(vehicleData.getVehicleId())
                 .stream().filter(m -> m.getMetricName() == metricType)
                 .collect(Collectors.toList());
         if (!metricsList.isEmpty()) {

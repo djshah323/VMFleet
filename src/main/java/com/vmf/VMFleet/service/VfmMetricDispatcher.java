@@ -1,6 +1,7 @@
 package com.vmf.VMFleet.service;
 
-import com.vmf.VMFleet.api.model.VehicleData;
+import com.vmf.VMFleet.dao.VehicleData;
+import com.vmf.VMFleet.dao.VehicleDataRepo;
 import com.vmf.VMFleet.kafka.KFleetPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,13 @@ public class VfmMetricDispatcher {
     @Autowired
     KFleetPublisher kFleetPublisher;
 
+    @Autowired
+    VehicleDataRepo vehicleDataRepo;
+
     public void process(VehicleData metrics) {
+
+        vehicleDataRepo.save(metrics);
+
         Optional.of(metrics).map(value-> {
                 kFleetPublisher.publishDistance(value.distanceMetrics());
                 return value; })
